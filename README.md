@@ -128,3 +128,19 @@ open up you local host and port
     AWS_ECR_LOGIN_URI = demo>>  566373416292.dkr.ecr.ap-south-1.amazonaws.com
 
     ECR_REPOSITORY_NAME = cdc-app
+
+## Run from terminal:
+
+    docker build -t chickenapp.azurecr.io/cdc:latest .
+
+    docker login cdcapp.azurecr.io
+
+    docker push chickenapp.azurecr.io/cdc:latest
+
+
+## Deployment Steps:
+
+    1. Build the Docker image of the Source Code
+    2. Push the Docker image to Container Registry
+    3. Launch the Web App Server in Azure
+    4. Pull the Docker image from the container registry to Web App server and run
