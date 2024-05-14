@@ -125,17 +125,17 @@ open up you local host and port
 
     AWS_REGION = us-east-1
 
-    AWS_ECR_LOGIN_URI = demo>>  566373416292.dkr.ecr.ap-south-1.amazonaws.com
+    AWS_ECR_LOGIN_URI = 173303962959.dkr.ecr.us-east-1.amazonaws.com
 
-    ECR_REPOSITORY_NAME = cdc-app
+    ECR_REPOSITORY_NAME = cdc
 ## Save pass:
 ## Run from terminal:
 
-    docker build -t chickenapp.azurecr.io/cdc:latest .
+    docker build -t cdcapp.azurecr.io/cdc:latest .
 
     docker login cdcapp.azurecr.io
 
-    docker push chickenapp.azurecr.io/cdc:latest
+    docker push cdcapp.azurecr.io/cdc:latest
 
 
 ## Deployment Steps:
