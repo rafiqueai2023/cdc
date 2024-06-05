@@ -1,0 +1,51 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - cdcappcz
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://cdcapp.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_61562d7b462d4cb98633707ae0c158af }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_bbb36e0fa67d41d1a6748eb0f3dfa223 }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: cdcapp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_61562d7b462d4cb98633707ae0c158af }}/cdc:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'cdcappcz'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_ed2af327611242bfa9dca298409a0f9a }}
+        images: 'cdcapp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_61562d7b462d4cb98633707ae0c158af }}/cdc:${{ github.sha }}'
